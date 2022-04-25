@@ -53,16 +53,16 @@ const requestListener = async (req, res) => {
                     })
                     successHandler(res, newPost);
                 } else {
-                    handleError(res);
+                    errorHandler(res, 400, libs.message.wrongColumn);
                 }
             } catch (err) {
-                handleError(res, err);
+                errorHandler(res, 400, libs.err.message);
             }
         })
     } else if (url === '/posts' && method === 'DELETE') {
         const posts = await Posts.deleteMany({})
         successHandler(res, posts);
-    } else if (url.startsWith("/todos/") && method === "DELETE") {
+    } else if (url.startsWith("/posts/") && method === "DELETE") {
         try {
             const id = req.url.split('/').pop();
             const posts = await Posts.findByIdAndDelete(id)
@@ -76,7 +76,7 @@ const requestListener = async (req, res) => {
         } catch (err) {
             errorHandler(res, 400, libs.err.message);
         }
-    } else if (url.startsWith("/todos/") && method === "PATCH") {
+    } else if (url.startsWith("/posts/") && method === "PATCH") {
         req.on('end', async () => {
             const { noData, wrongColumn } = libs.message
             try {
